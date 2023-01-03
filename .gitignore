@@ -1,0 +1,8 @@
+.activate
+.env
+.git
+.venv
+*.gif
+*.jpg
+*.png
+images
