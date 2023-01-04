@@ -5,9 +5,10 @@ import time
 import telegram
 
 from dotenv import load_dotenv
+from pathlib import Path
 
 
-def post_image_to_channel(token, document):
+def upload_image_to_channel(token, document):
     bot = telegram.Bot(token)
     updates = bot.get_updates()
     chat_id = updates[-1]['channel_post']['chat']['id']
@@ -21,6 +22,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument(
             "pause_time",
+            nargs='?',
             help="Post to telegram pause time",
             type=str
     )
@@ -32,8 +34,9 @@ def main():
                 images = list(os.walk(os.path.join(os.path.abspath("."),
                                                    "images")))[0][2]
                 random.shuffle(images)
-            document = open(f"images/{images.pop()}", 'rb')
-            post_image_to_channel(token, document)
+            with open(f"images/{images.pop()}", 'rb') as image:
+                if os.path.getsize(image.name)/(1024**2) < 20:
+                    post_image_to_channel(token, image)
             time.sleep(pause_time)
     except Exception as e:
         print(e)
