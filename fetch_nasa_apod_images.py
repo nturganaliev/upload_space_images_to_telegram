@@ -1,3 +1,4 @@
+import argparse
 import os
 import requests
 
@@ -25,8 +26,16 @@ def main():
     load_dotenv()
     directory = "images"
     path = os.path.abspath(".")
-    params = {"count": 10, "api_key": os.getenv("NASA_API_KEY")}
     url = "https://api.nasa.gov/planetary/apod"
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+            "count", nargs='?',
+            help="Number of images to be downloaded",
+            type=str
+    )
+    args = parser.parse_args()
+    count = 3 if not args.count else args.count
+    params = {"count": count, "api_key": os.getenv("NASA_API_KEY")}
     try:
         os.makedirs(os.path.join(path, directory), exist_ok=True)
         fetch_nasa_apod_images(url, os.path.join(path, directory), params)
