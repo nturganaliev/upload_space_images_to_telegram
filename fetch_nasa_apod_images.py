@@ -31,17 +31,16 @@ def main():
     parser.add_argument(
             "count", nargs='?',
             help="Number of images to be downloaded",
-            type=str
+            default=3,
+            type=int
     )
     args = parser.parse_args()
-    count = 3 if not args.count else args.count
-    params = {"count": count, "api_key": os.getenv("NASA_API_KEY")}
+    params = {"count": args.count, "api_key": os.getenv("NASA_API_KEY")}
+    os.makedirs(os.path.join(path, directory), exist_ok=True)
     try:
-        os.makedirs(os.path.join(path, directory), exist_ok=True)
         fetch_nasa_apod_images(url, os.path.join(path, directory), params)
-    except FileExistsError as error:
-        # directory already exist
-        pass
+    except requests.exceptions.RequestException as error:
+        raise error
 
 
 if __name__ == "__main__":

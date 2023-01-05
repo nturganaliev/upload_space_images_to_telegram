@@ -25,12 +25,11 @@ def main():
     path = os.path.abspath(".")
     params = {"api_key": os.getenv("NASA_API_KEY")}
     url = "https://api.nasa.gov/EPIC/api/natural"
+    os.makedirs(os.path.join(path, directory), exist_ok=True)
     try:
-        os.makedirs(os.path.join(path, directory), exist_ok=True)
         fetch_nasa_epic_images(url, os.path.join(path, directory), params)
-    except FileExistsError as error:
-        # directory already exist
-        pass
+    except requests.exceptions.RequestException as error:
+        raise error
 
 
 if __name__ == "__main__":
