@@ -18,6 +18,7 @@ def fetch_nasa_epic_images(url, path, params):
             params
         )
 
+
 def main():
     load_dotenv()
     directory = "images"
