@@ -8,11 +8,11 @@ from dotenv import load_dotenv
 from pathlib import Path
 
 
-def upload_image_to_channel(token, document):
+def upload_image_to_channel(token, image):
     bot = telegram.Bot(token)
     updates = bot.get_updates()
     chat_id = updates[-1]['channel_post']['chat']['id']
-    bot.send_document(chat_id, document)
+    bot.send_document(chat_id, image)
 
 
 def main():
@@ -36,7 +36,7 @@ def main():
                 random.shuffle(images)
             with open(f"images/{images.pop()}", 'rb') as image:
                 if os.path.getsize(image.name)/(1024**2) < 20:
-                    post_image_to_channel(token, image)
+                    upload_image_to_channel(token, image)
             time.sleep(pause_time)
     except Exception as e:
         print(e)
