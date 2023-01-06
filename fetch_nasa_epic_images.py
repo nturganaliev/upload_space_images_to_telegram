@@ -21,15 +21,16 @@ def fetch_nasa_epic_images(url, path, params):
 
 def main():
     load_dotenv()
-    directory = "images"
-    path = os.path.abspath(".")
-    params = {"api_key": os.getenv("NASA_API_KEY")}
     url = "https://api.nasa.gov/EPIC/api/natural"
-    os.makedirs(os.path.join(path, directory), exist_ok=True)
+    params = {"api_key": os.getenv("NASA_API_KEY")}
+    path = os.path.join(os.path.abspath("."), "images")
+    if not os.path.exists(path):
+        os.makedirs(path, exist_ok=True)
     try:
-        fetch_nasa_epic_images(url, os.path.join(path, directory), params)
+        fetch_nasa_epic_images(url, path, params)
     except requests.exceptions.RequestException as error:
-        raise error
+        print(error)
+    print("Завершение программы")
 
 
 if __name__ == "__main__":

@@ -24,9 +24,10 @@ def fetch_nasa_apod_images(url, path, params=None):
 
 def main():
     load_dotenv()
-    directory = "images"
-    path = os.path.abspath(".")
     url = "https://api.nasa.gov/planetary/apod"
+    path = os.path.join(os.path.abspath("."), "images")
+    if not os.path.exists(path):
+        os.makedirs(path, exist_ok=True)
     parser = argparse.ArgumentParser()
     parser.add_argument(
             "count", nargs='?',
@@ -36,11 +37,11 @@ def main():
     )
     args = parser.parse_args()
     params = {"count": args.count, "api_key": os.getenv("NASA_API_KEY")}
-    os.makedirs(os.path.join(path, directory), exist_ok=True)
     try:
-        fetch_nasa_apod_images(url, os.path.join(path, directory), params)
+        fetch_nasa_apod_images(url, path, params)
     except requests.exceptions.RequestException as error:
-        raise error
+        print(error)
+    print("Завершение программы")
 
 
 if __name__ == "__main__":

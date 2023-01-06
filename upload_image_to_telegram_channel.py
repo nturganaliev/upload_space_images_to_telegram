@@ -29,6 +29,7 @@ def main():
 
     images = os.listdir(path)
     token = os.getenv('TELEGRAM_BOT_TOKEN')
+
     parser = argparse.ArgumentParser()
     parser.add_argument(
             "pause_time",
@@ -52,6 +53,7 @@ def main():
         print(bad_request)
     except telegram.error.Unauthorized as unauthorized:
         print(f"{unauthorized}, check your TELEGRAM_BOT_TOKEN")
+    print("Завершение программы")
 
 
 if __name__ == '__main__':

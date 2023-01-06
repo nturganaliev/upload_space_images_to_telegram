@@ -28,9 +28,10 @@ def fetch_spacex_last_launch(url, path, launch_id, params=None):
 
 
 def main():
-    directory = "images"
-    path = os.path.abspath(".")
     url = "https://api.spacexdata.com/v5/launches/"
+    path = os.path.join(os.path.abspath("."), "images")
+    if not os.path.exists(path):
+        os.makedirs(path, exist_ok=True)
     parser = argparse.ArgumentParser()
     parser.add_argument(
             "launch_id", nargs='?',
@@ -38,19 +39,18 @@ def main():
             type=str
     )
     args = parser.parse_args()
-    os.makedirs(os.path.join(path, directory), exist_ok=True)
     try:
-        if not args.launch_id:
-            launch_id = get_spacex_last_launch_id(url)
-            fetch_spacex_last_launch(url,
-                                     os.path.join(path, directory),
-                                     launch_id)
-            return
-        fetch_spacex_last_launch(url,
-                                 os.path.join(path, directory),
-                                 args.launch_id)
+        launch_id = (
+            args.launch_id if args.launch_id else get_spacex_last_launch_id(url)
+        )
     except requests.exceptions.RequestException as error:
-        raise error
+        print(error)
+    try:
+        if launch_id:
+            fetch_spacex_last_launch(url, path, launch_id)
+    except requests.exceptions.RequestException as error:
+        print(error)
+    print("Завершение программы")
 
 
 if __name__ == "__main__":
