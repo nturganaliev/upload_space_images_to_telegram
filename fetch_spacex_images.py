@@ -13,9 +13,9 @@ def get_spacex_last_launch_id(url):
             return launch["id"]
 
 
-def fetch_spacex_last_launch(url, path, launch_id, params=None):
+def fetch_spacex_launch(url, path, params=None):
     image_links = None
-    response = requests.get(f"{url}{launch_id}")
+    response = requests.get(url)
     response.raise_for_status()
     if not response.json()["links"]["flickr"]["original"]:
         return
@@ -46,8 +46,7 @@ def main():
     except requests.exceptions.RequestException as error:
         print(error)
     try:
-        if launch_id:
-            fetch_spacex_last_launch(url, path, launch_id)
+        fetch_spacex_launch(f"{url}{launch_id}", path)
     except requests.exceptions.RequestException as error:
         print(error)
     print("Завершение программы")
